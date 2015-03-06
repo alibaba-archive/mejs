@@ -1,25 +1,39 @@
 {
   "name": "mejs",
-  "version": "0.0.1",
-  "description": "Moduled and Embedded JavaScript templates",
+  "description": "Moduled and Embedded JavaScript templates, run in node.js and all browsers",
+  "authors": [
+    "Yan Qing <admin@zensh.com>"
+  ],
+  "version": "0.0.2",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:teambition/mejs.git"
+  },
+  "homepage": "https://github.com/teambition/mejs",
+  "keywords": [
+    "ejs",
+    "templates"
+  ],
+  "dependencies": {
+    "glob": "^4.4.2"
+  },
+  "devDependencies": {
+    "gulp": "^3.8.10",
+    "gulp-jshint": "^1.9.2",
+    "gulp-mocha": "^2.0.0",
+    "gulp-sequence": "^0.3.1",
+    "mocha": "^2.1.0"
+  },
   "scripts": {
     "test": "gulp test"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/teambition/mejs.git"
-  },
-  "keywords": [
-    "template",
-    "engine",
-    "mejs",
-    "ejs"
-  ],
-  "author": "",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/teambition/mejs/issues"
-  },
-  "homepage": "https://github.com/teambition/mejs"
+  "ignore": [
+    "**/.*",
+    "benchmark",
+    "test",
+    "examples",
+    "docs",
+    "gulpfile.js"
+  ]
 }
