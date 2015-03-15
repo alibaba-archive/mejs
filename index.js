@@ -20,6 +20,28 @@ function mejsCompile(pattern, options) {
   return runInThisContext(mejs, {filename: 'mejs.js'});
 }
 
+mejsCompile.Ejs = Ejs;
+mejsCompile.precompile = function(files, options) {
+  options = options || {};
+
+  var baseReg = '';
+  if (options.base)
+    baseReg = new RegExp('^' + options.base.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+  var contentTpl = 'templates[\'%s\'] = %s;\n\n';
+  var templates = files.reduce(function(joined, file) {
+    var name = path.relative(file.base, file.path)
+      .replace(/\\/g, '/')
+      .replace(baseReg, '');
+    name = name.replace(path.extname(name), '').replace(/^[\.\/]*/, '');
+
+    var tpl = new Ejs(stripBOM(file.contents.toString('utf8')), options);
+    return joined + util.format(contentTpl, name, tpl.compile());
+  }, '');
+
+  templates = templates.trim().replace(/^/gm, '  ');
+  return mejsTpl.replace('/*TEMPLATES_PLACEHOLDER*/', templates);
+};
+
 mejsCompile.precompileFromGlob = function(pattern, options) {
   options = options || {};
   var globOptions = options.glob || {};
@@ -34,28 +56,6 @@ mejsCompile.precompileFromGlob = function(pattern, options) {
       contents: fs.readFileSync(path)
     });
   }), options);
-};
-
-mejsCompile.precompile = function(files, options) {
-  options = options || {};
-
-  var baseReg = '';
-  if (options.base)
-    baseReg = new RegExp('^' + options.base.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
-  var contentTpl = 'templates[\'%s\'] = %s;\n\n';
-  var templates = files.reduce(function(joined, file) {
-    var name = path.relative(file.base, file.path)
-      .replace(/\\/g, '/')
-      .replace(baseReg, '')
-      .replace(path.extname(name), '')
-      .replace(/^[\.\/]*/, '');
-
-    var tpl = new Ejs(stripBOM(file.contents.toString('utf8')), options);
-    return joined + util.format(contentTpl, name, tpl.compile());
-  }, '');
-
-  templates = templates.trim().replace(/^/gm, '  ');
-  return mejsTpl.replace('/*TEMPLATES_PLACEHOLDER*/', templates);
 };
 
 // TODO watch and update templates for development
