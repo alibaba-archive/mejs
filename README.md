@@ -54,8 +54,8 @@ Compile ejs templates to a `Mejs` Class.
 var Mejs = mejsCompile('views/**/*.html', {base: 'views'});
 ```
 
-### mejsCompile.precompile(files, [options]) => `mejs` source string
-Precompile ejs templates to a source string, then you can write it to a JS file.
+### mejsCompile.precompile(files, [options]) => `mejs` file object
+Precompile ejs templates to a file object, then you can write it to a JS file.
 
 - `files`: Template files array, the file in array must have `path` and `contents`.
 - `options`: `options` is same as above.
@@ -75,8 +75,8 @@ var mejsSource = mejsCompile.precompile([{
 ], {base: 'views'});
 ```
 
-### mejsCompile.precompileFromGlob(pattern, [options]) => `mejs` source string
-Precompile ejs teamplates to a source string, then you can write it to a JS file.
+### mejsCompile.precompileFromGlob(pattern, [options]) => `mejs` file object
+Precompile ejs teamplates to a file object, then you can write it to a JS file.
 
 - `pattern`: glob pattern.
 - `options`: `options` is same as above.
@@ -93,6 +93,9 @@ var Mejs = mejsCompile('views/**/*.html', {base: 'views'});
 var mejs = new Mejs();
 mejsCompile.watch(mejs, 'views/**/*.html', {base: 'views'});
 ```
+
+### mejsCompile.Templates(text, [options])
+Ejs templates engine.
 
 ### new Mejs(locals) => `mejs` object
 

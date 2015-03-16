@@ -8,8 +8,8 @@ var fs = require('fs');
 var util = require('util');
 var path = require('path');
 var glob = require('glob');
-var Ejs = require('./lib/ejs');
-var runInThisContext = require('vm').runInThisContext;
+var Templates = require('./lib/ejs');
+var runInNewContext = require('vm').runInNewContext;
 
 var mejsTpl = stripBOM(fs.readFileSync('./lib/mejs.js', {encoding: 'utf8'}));
 
@@ -17,29 +17,34 @@ module.exports = mejsCompile;
 
 function mejsCompile(pattern, options) {
   var mejs = mejsCompile.precompileFromGlob(pattern, options);
-  return runInThisContext(mejs, {filename: 'mejs.js'});
+  var sandbox = {module: {exports: {}}};
+  runInNewContext(mejs.contents.toString(), sandbox, {filename: mejs.path});
+  return sandbox.module.exports;
 }
 
-mejsCompile.Ejs = Ejs;
+mejsCompile.Templates = Templates;
 mejsCompile.precompile = function(files, options) {
   options = options || {};
 
-  var baseReg = '';
-  if (options.base)
-    baseReg = new RegExp('^' + options.base.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+  var isBuffer = true;
   var contentTpl = 'templates[\'%s\'] = %s;\n\n';
   var templates = files.reduce(function(joined, file) {
-    var name = path.relative(file.base, file.path)
-      .replace(/\\/g, '/')
-      .replace(baseReg, '');
+    var name = path.relative(file.base, file.path).replace(/\\/g, '/');
     name = name.replace(path.extname(name), '').replace(/^[\.\/]*/, '');
 
-    var tpl = new Ejs(stripBOM(file.contents.toString('utf8')), options);
+    isBuffer = isBuffer && Buffer.isBuffer(file.contents);
+    var tpl = new Templates(stripBOM(file.contents.toString()), options);
     return joined + util.format(contentTpl, name, tpl.compile());
   }, '');
 
-  templates = templates.trim().replace(/^/gm, '  ');
-  return mejsTpl.replace('/*TEMPLATES_PLACEHOLDER*/', templates);
+  templates = templates.trim().replace(/^/gm, '    ').trim();
+  templates = mejsTpl.replace('/*TEMPLATES_PLACEHOLDER*/', templates);
+
+  return new File({
+    base: '',
+    path: options.filename || 'mejs.js',
+    contents: isBuffer ? new Buffer(templates) : templates
+  });
 };
 
 mejsCompile.precompileFromGlob = function(pattern, options) {
@@ -53,6 +58,7 @@ mejsCompile.precompileFromGlob = function(pattern, options) {
   return mejsCompile.precompile(files.map(function(path) {
     return new File({
       path: path,
+      base: options.base,
       contents: fs.readFileSync(path)
     });
   }), options);
@@ -67,13 +73,7 @@ function File(file) {
   this.contents = file.contents;
 }
 
-function fullName(name) {
-  return name.replace(/\\/g, '/');
-}
-
 function stripBOM(content) {
-  if (content.charCodeAt(0) === 0xFEFF) {
-    content = content.slice(1);
-  }
+  if (content.charCodeAt(0) === 0xFEFF) content = content.slice(1);
   return content;
 }
