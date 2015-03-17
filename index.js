@@ -11,7 +11,7 @@ var glob = require('glob');
 var Templates = require('./lib/ejs');
 var runInNewContext = require('vm').runInNewContext;
 
-var mejsTpl = stripBOM(fs.readFileSync('./lib/mejs.js', {encoding: 'utf8'}));
+var mejsTpl = stripBOM(fs.readFileSync(path.join(__dirname, './lib/mejs.js'), {encoding: 'utf8'}));
 
 module.exports = mejsCompile;
 
@@ -37,7 +37,7 @@ mejsCompile.precompile = function(files, options) {
     return joined + util.format(contentTpl, name, tpl.compile());
   }, '');
 
-  templates = templates.trim().replace(/^/gm, '    ').trim();
+  templates = templates.replace(/^/gm, '    ').replace(/^\s+$/gm, '').trim();
   templates = mejsTpl.replace('/*TEMPLATES_PLACEHOLDER*/', templates);
 
   return new File({
