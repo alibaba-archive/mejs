@@ -54,12 +54,12 @@ Compile ejs templates to a `Mejs` Class.
 
 - `pattern`: [Glob](https://github.com/isaacs/node-glob) pattern to read template files.
 - `options.glob`: Glob options
-- `options.base`: Everything before a glob (same as tplName) starts, default is `''`.
+- `options.base`: Everything before a glob (same as tplName) starts.
 - `options.delimiter`: Character to use with angle brackets for open/close, default is `%`.
 - `options.rmWhitespace`: Remove all safe-to-remove whitespace, including leading and trailing whitespace. It also enables a safer version of `-%>` line slurping for all scriptlet tags (it does not strip new lines of tags in the middle of a line).
 
 ```js
-var Mejs = mejsCompile('views/**/*.html', {base: 'views'});
+var Mejs = mejsCompile('views/**/*.html'); // options.base == 'views/'
 ```
 
 ### mejsCompile.initMejs(pattern, [options]) => `renderTpl` function

@@ -118,6 +118,7 @@ mejsCompile.precompileFromGlob = function(pattern, options) {
   globOptions.matchBase = globOptions.matchBase !== false;
   var files = glob.sync(pattern, globOptions);
   if (!files.length) throw new Error('No file matched with ' + pattern);
+  if (!options.base) options.base = pattern.replace(/\*.*$/, '');
   return mejsCompile.precompile(files.map(function(path) {
     return new File({
       path: path,
