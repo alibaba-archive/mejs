@@ -13,8 +13,9 @@ Moduled and Embedded JavaScript templates, run in node.js and all browsers.
 - Unescaped raw output with `<%- %>`
 - Trim-mode ('newline slurping') with `-%>` ending tag
 - Custom delimiters (e.g., use '<? ?>' instead of '<% %>')
-- Support `include`
-- Support `import`(Moduled)
+- Full support for `include`
+- Full support for `import`(Moduled)
+- Support `layout` in server side
 - Support [express](https://github.com/strongloop/express), [koa](https://github.com/koajs/koa), [toa](https://github.com/toajs/toa) ...
 
 ## Tags
@@ -64,13 +65,17 @@ var Mejs = mejsCompile('views/**/*.html', {base: 'views'});
 ```js
 var app = express();
 var renderTpl = mejsCompile.initMejs('views/**/*.ejs', {
+  layout: 'layout',
   locals: app.locals
 });
 app.engine('ejs', renderTpl);
 app.set('view engine', 'ejs');
 
-//...
+//... render with layout
 res.render('index', {user: req.user});
+
+//... disable layout for 'login' view
+res.render('login', {layout: false});
 ```
 
 ### mejsCompile.precompile(files, [options]) => `mejs` file object

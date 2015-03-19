@@ -48,6 +48,7 @@ mejsCompile.Templates = Templates;
 //
 // var app = express();
 // var renderTpl = mejsCompile.initMejs('views/**/*.ejs', {
+//   layout: 'layout',
 //   locals: app.locals
 // });
 // app.engine('ejs', renderTpl);
@@ -61,9 +62,17 @@ mejsCompile.initMejs = function(pattern, options) {
 
   var Mejs = mejsCompile(pattern, options);
   var mejs = new Mejs(options.locals);
+  mejs.locals.layout = mejs.locals.layout || options.layout;
 
   function renderTpl(tplName, data) {
-    return mejs.render(tplName, data);
+    data = data || {};
+    var tpl = mejs.render(tplName, data);
+    var layout = mejs.locals.layout || data.layout;
+    if (layout && data.layout !== false && mejs.templates[layout]) {
+      data.body = tpl;
+      return mejs.render(layout, data);
+    }
+    return tpl;
   }
 
   renderTpl.Mejs = Mejs;
