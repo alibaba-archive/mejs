@@ -11,10 +11,23 @@ var glob = require('glob');
 var Templates = require('./lib/ejs');
 var runInNewContext = require('vm').runInNewContext;
 
-var mejsTpl = stripBOM(fs.readFileSync(path.join(__dirname, './lib/mejs.js'), {encoding: 'utf8'}));
+var mejsTpl = stripBOM(fs.readFileSync(path.resolve(__dirname, 'lib/mejs.js'), {encoding: 'utf8'}));
 
 module.exports = mejsCompile;
 
+
+// mejsCompile(pattern, options) => Mejs class
+//
+// Examples:
+//
+// var Mejs = mejsCompile('views/**/*.ejs');
+// var mejs = new Mejs({
+//   config: config
+// });
+//
+// ...
+// mejs.render('index', {user: req.user});
+// ...
 function mejsCompile(pattern, options) {
   var mejs = mejsCompile.precompileFromGlob(pattern, options);
   var sandbox = {module: {exports: {}}};
@@ -22,7 +35,48 @@ function mejsCompile(pattern, options) {
   return sandbox.module.exports;
 }
 
+
+// Ejs templates engine class
+//
 mejsCompile.Templates = Templates;
+
+
+// mejsCompile.initMejs(pattern, options) => render function
+// useful for express
+//
+// Examples:
+//
+// var app = express();
+// var renderTpl = mejsCompile.initMejs('views/**/*.ejs', {
+//   locals: app.locals
+// });
+// app.engine('ejs', renderTpl);
+// app.set('view engine', 'ejs');
+//
+// ...
+// res.render('index', {user: req.user});
+// ...
+mejsCompile.initMejs = function(pattern, options) {
+  options = options || {};
+
+  var Mejs = mejsCompile(pattern, options);
+  var mejs = new Mejs(options.locals);
+
+  function renderTpl(tplName, data) {
+    return mejs.render(tplName, data);
+  }
+
+  renderTpl.Mejs = Mejs;
+  renderTpl.mejs = mejs;
+  return renderTpl;
+};
+
+
+// mejsCompile.precompile(files, options) => file object
+// useful for gulp
+//
+// Examples: https://github.com/teambition/gulp-mejs
+//
 mejsCompile.precompile = function(files, options) {
   options = options || {};
 
@@ -63,9 +117,6 @@ mejsCompile.precompileFromGlob = function(pattern, options) {
     });
   }), options);
 };
-
-// TODO watch and update templates for development
-mejsCompile.watch = function(mejs, pattern) {};
 
 function File(file) {
   this.path = file.path;

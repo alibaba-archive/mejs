@@ -13,7 +13,9 @@ Moduled and Embedded JavaScript templates, run in node.js and all browsers.
 - Unescaped raw output with `<%- %>`
 - Trim-mode ('newline slurping') with `-%>` ending tag
 - Custom delimiters (e.g., use '<? ?>' instead of '<% %>')
-- Includes
+- Support `include`
+- Support `import`(Moduled)
+- Support [express](https://github.com/strongloop/express), [koa](https://github.com/koajs/koa), [toa](https://github.com/toajs/toa) ...
 
 ## Tags
 
@@ -54,6 +56,23 @@ Compile ejs templates to a `Mejs` Class.
 var Mejs = mejsCompile('views/**/*.html', {base: 'views'});
 ```
 
+### mejsCompile.initMejs(pattern, [options]) => `renderTpl` function
+
+- `pattern`: `pattern` is same as above.
+- `options`: `options` is same as above, and have `options.locals` apply for Mejs class
+
+```js
+var app = express();
+var renderTpl = mejsCompile.initMejs('views/**/*.ejs', {
+  locals: app.locals
+});
+app.engine('ejs', renderTpl);
+app.set('view engine', 'ejs');
+
+//...
+res.render('index', {user: req.user});
+```
+
 ### mejsCompile.precompile(files, [options]) => `mejs` file object
 Precompile ejs templates to a file object, then you can write it to a JS file.
 
@@ -83,15 +102,6 @@ Precompile ejs teamplates to a file object, then you can write it to a JS file.
 
 ```js
 var mejsSource = mejsCompile.precompileFromGlob('views/**/*.js', {base: 'views'});
-```
-
-### mejsCompile.watch(mejs, pattern, [options])
-Watch and update templates in realtime, useful for development.
-
-```js
-var Mejs = mejsCompile('views/**/*.html', {base: 'views'});
-var mejs = new Mejs();
-mejsCompile.watch(mejs, 'views/**/*.html', {base: 'views'});
 ```
 
 ### mejsCompile.Templates(text, [options])
