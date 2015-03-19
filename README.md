@@ -28,6 +28,11 @@ Moduled and Embedded JavaScript templates, run in node.js and all browsers.
 - `%>`:  Plain ending tag
 - `-%>`: Trim-mode ('newline slurp') tag, trims following newline
 
+Implementations:
+
+- [toa-mejs](https://github.com/toajs/toa-mejs)
+- [gulp-mejs](https://github.com/teambition/gulp-mejs)
+
 ## Demo
 
 
