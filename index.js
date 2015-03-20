@@ -41,43 +41,59 @@ function mejsCompile(pattern, options) {
 mejsCompile.Templates = Templates;
 
 
-// mejsCompile.initMejs(pattern, options) => render function
+// mejsCompile.initView(pattern, options) => View class
 // useful for express
 //
 // Examples:
 //
 // var app = express();
-// var renderTpl = mejsCompile.initMejs('views/**/*.ejs', {
+// app.set('view', mejs.initView('views/**/*.ejs', {
 //   layout: 'layout',
 //   locals: app.locals
 // });
-// app.engine('ejs', renderTpl);
-// app.set('view engine', 'ejs');
 //
 // ...
 // res.render('index', {user: req.user});
 // ...
+mejsCompile.initView = function(pattern, options) {
+
+  function View(tplName) {
+    this.tplName = tplName;
+  }
+
+  View.prototype.path = 'NO_NEED'; //fake for express
+  View.prototype.mejs = mejsCompile.initMejs(pattern, options);
+  View.prototype.render = function(data, fn) {
+    fn(null, this.mejs.renderEx(this.tplName, data));
+  };
+  return View;
+};
+
+
+// mejsCompile.initMejs(pattern, options) => `mejs` object with `renderEx` method
+// useful for server side
+//
+// Examples: mejsCompile.initView, https://github.com/toajs/toa-mejs
+//
 mejsCompile.initMejs = function(pattern, options) {
   options = options || {};
 
   var Mejs = mejsCompile(pattern, options);
-  var mejs = new Mejs(options.locals);
-  mejs.locals.layout = mejs.locals.layout || options.layout;
 
-  function renderTpl(tplName, data) {
+  Mejs.prototype.renderEx = function(tplName, data) {
     data = data || {};
-    var tpl = mejs.render(tplName, data);
-    var layout = mejs.locals.layout || data.layout;
-    if (layout && data.layout !== false && mejs.templates[layout]) {
+    var tpl = this.render(tplName, data);
+    var layout = this.locals.layout || data.layout;
+    if (layout && data.layout !== false && this.templates[layout]) {
       data.body = tpl;
-      return mejs.render(layout, data);
+      return this.render(layout, data);
     }
     return tpl;
-  }
+  };
 
-  renderTpl.Mejs = Mejs;
-  renderTpl.mejs = mejs;
-  return renderTpl;
+  var locals = options.locals || {};
+  locals.layout = locals.layout || options.layout;
+  return new Mejs(locals);
 };
 
 

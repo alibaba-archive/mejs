@@ -62,19 +62,23 @@ Compile ejs templates to a `Mejs` Class.
 var Mejs = mejsCompile('views/**/*.html'); // options.base == 'views/'
 ```
 
-### mejsCompile.initMejs(pattern, [options]) => `renderTpl` function
+### mejsCompile.initMejs(pattern, [options]) => `mejs` object
+
+`mejs` object have `renderEx` method that support `layout`, it is useful in server side.
 
 - `pattern`: `pattern` is same as above.
-- `options`: `options` is same as above, and have `options.locals` apply for Mejs class
+- `options`: `options` is same as above, and have `options.locals` and `options.layout` apply for Mejs class
+
+### mejsCompile.initView(pattern, [options]) => `View` class
+
+It is implemented for express. arguments is same as `mejsCompile.initMejs`.
 
 ```js
 var app = express();
-var renderTpl = mejsCompile.initMejs('views/**/*.ejs', {
+app.set('view', mejs.initView('views/**/*.ejs', {
   layout: 'layout',
   locals: app.locals
 });
-app.engine('ejs', renderTpl);
-app.set('view engine', 'ejs');
 
 //... render with layout
 res.render('index', {user: req.user});
