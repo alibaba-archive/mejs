@@ -91,7 +91,8 @@ res.render('login', {layout: false});
 Precompile ejs templates to a file object, then you can write it to a JS file.
 
 - `files`: Template files array, the file in array must have `path` and `contents`.
-- `options`: `options` is same as above.
+- `options`: `options` is same as above. but one more:
+  - `options.mini`: Precompile a minimum templates module, it is not a Mejs class, should be imported to Mejs class by `Mejs.import`
 
 ```js
 var mejsSource = mejsCompile.precompile([{
@@ -140,6 +141,17 @@ var mejs = new Mejs({
     return this.__.apply(this, arguments);
   }
 });
+```
+
+### Class Method: Mejs.import(templates)
+Import templates to global from a templates module.
+
+```js
+var Mejs = require('Mejs');
+var tplsA = require('tplsA');
+var tplsB = require('tplsB');
+
+Mejs.import(tplsA).import(tplsB);
 ```
 
 ### mejs.render(tplName, data) => filled view string
