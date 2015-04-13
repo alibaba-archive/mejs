@@ -33,7 +33,8 @@ function mejsCompile(pattern, options) {
   options = options || {};
   options.mini = false;
   var mejs = mejsCompile.precompileFromGlob(pattern, options);
-  var sandbox = {module: {exports: {}}};
+  var sandbox = options.sandbox || {console: console};
+  sandbox.module = {exports: {}};
   runInNewContext(mejs.contents.toString(), sandbox, {filename: mejs.path});
   return sandbox.module.exports;
 }

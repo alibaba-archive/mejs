@@ -45,16 +45,17 @@ describe('mejs', function() {
     assert.strictEqual(mejs.resolve('a/', 'b'), 'a/b');
     assert.strictEqual(mejs.resolve('a//', 'b'), 'a/b');
     assert.strictEqual(mejs.resolve('/a/', 'b'), 'a/b');
-    assert.strictEqual(mejs.resolve('a/', '/b'), 'b');
-    assert.strictEqual(mejs.resolve('a/', '/b/c'), 'b/c');
-    assert.strictEqual(mejs.resolve('a/b/c', 'd'), 'a/b/d');
-    assert.strictEqual(mejs.resolve('a/b/c', './d'), 'a/b/d');
+    assert.strictEqual(mejs.resolve('a/', '/b'), 'a/b');
+    assert.strictEqual(mejs.resolve('a/', '/b/c'), 'a/b/c');
+    assert.strictEqual(mejs.resolve('a/b/c', 'd'), 'd');
     assert.strictEqual(mejs.resolve('a/b/c', '/d'), 'd');
+    assert.strictEqual(mejs.resolve('a/b/c', 'd/e/f'), 'd/e/f');
+    assert.strictEqual(mejs.resolve('a/b/c', './d'), 'a/b/d');
     assert.strictEqual(mejs.resolve('a/b/c', './../d'), 'a/d');
-    assert.strictEqual(mejs.resolve('a/b/c', '../e/d'), 'a/e/d');
-    assert.strictEqual(mejs.resolve('a/b/c/', '../e/d'), 'a/b/e/d');
-    assert.strictEqual(mejs.resolve('a/b/c/', '../e//d'), 'a/b/e/d');
-    assert.strictEqual(mejs.resolve('a/b/c/', '../../e/d'), 'a/e/d');
+    assert.strictEqual(mejs.resolve('a/b/c', '../d/e'), 'a/d/e');
+    assert.strictEqual(mejs.resolve('a/b/c/', '../d/e'), 'a/b/d/e');
+    assert.strictEqual(mejs.resolve('a/b/c/', '../d//e'), 'a/b/d/e');
+    assert.strictEqual(mejs.resolve('a/b/c/', '../../d/e'), 'a/d/e');
     done();
   });
 

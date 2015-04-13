@@ -67,7 +67,7 @@ var Mejs = mejsCompile('views/**/*.html'); // options.base == 'views/'
 `mejs` object have `renderEx` method that support `layout`, it is useful in server side.
 
 - `pattern`: `pattern` is same as above.
-- `options`: `options` is same as above, and have `options.locals` and `options.layout` apply for Mejs class
+- `options`: `options` is same as above, and have `options.locals`, `options.layout` and `options.sandbox` apply for Mejs class.
 
 ### mejsCompile.initView(pattern, [options]) => `View` class
 
