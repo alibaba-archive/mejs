@@ -121,7 +121,7 @@ mejsCompile.precompile = function(files, options) {
   }, '');
 
   templates = templates.replace(/^/gm, '  ').replace(/^\s+$/gm, '').trim();
-  templates = (options.mini ? tplsTpl : mejsTpl).replace('/*TEMPLATES_PLACEHOLDER*/', templates);
+  templates = (options.mini ? tplsTpl : mejsTpl).replace('/*TEMPLATES_PLACEHOLDER*/', function() { return templates; });
 
   return new File({
     base: '',
