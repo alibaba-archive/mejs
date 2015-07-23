@@ -48,11 +48,11 @@ npm install mejs
 var mejsCompile = require('mejs');
 ```
 
-### mejsCompile(pattern, [options]) => `Mejs` Class
+### mejsCompile(patternOrMejsfile[, options]) => `Mejs` Class
 
 Compile ejs templates to a `Mejs` Class.
 
-- `pattern`: [Glob](https://github.com/isaacs/node-glob) pattern to read template files.
+- `patternOrMejsfile`: [Glob](https://github.com/isaacs/node-glob) pattern to read template files. Or `mejs` file object.
 - `options.glob`: Glob options
 - `options.base`: Everything before a glob (same as tplName) starts.
 - `options.delimiter`: Character to use with angle brackets for open/close, default is `%`.
@@ -62,14 +62,14 @@ Compile ejs templates to a `Mejs` Class.
 var Mejs = mejsCompile('views/**/*.html'); // options.base == 'views/'
 ```
 
-### mejsCompile.initMejs(pattern, [options]) => `mejs` object
+### mejsCompile.initMejs(pattern[, options]) => `mejs` object
 
 `mejs` object have `renderEx` method that support `layout`, it is useful in server side.
 
 - `pattern`: `pattern` is same as above.
 - `options`: `options` is same as above, and have `options.locals`, `options.layout` and `options.sandbox` apply for Mejs class.
 
-### mejsCompile.initView(pattern, [options]) => `View` class
+### mejsCompile.initView(pattern[, options]) => `View` class
 
 It is implemented for express. arguments is same as `mejsCompile.initMejs`.
 
@@ -87,7 +87,7 @@ res.render('index', {user: req.user});
 res.render('login', {layout: false});
 ```
 
-### mejsCompile.precompile(files, [options]) => `mejs` file object
+### mejsCompile.precompile(files[, options]) => `mejs` file object
 Precompile ejs templates to a file object, then you can write it to a JS file.
 
 - `files`: Template files array, the file in array must have `path` and `contents`.
@@ -109,7 +109,7 @@ var mejsSource = mejsCompile.precompile([{
 ], {base: 'views'});
 ```
 
-### mejsCompile.precompileFromGlob(pattern, [options]) => `mejs` file object
+### mejsCompile.precompileFromGlob(pattern[, options]) => `mejs` file object
 Precompile ejs teamplates to a file object, then you can write it to a JS file.
 
 - `pattern`: glob pattern.
@@ -119,8 +119,11 @@ Precompile ejs teamplates to a file object, then you can write it to a JS file.
 var mejsSource = mejsCompile.precompileFromGlob('views/**/*.js', {base: 'views'});
 ```
 
-### mejsCompile.Templates(text, [options])
+### mejsCompile.Templates(text[, options])
 Ejs templates engine.
+
+### mejsCompile.File(contents[, options][, base])
+`mejs` file Class. It is similar to [vinyl](http://github.com/wearefractal/vinyl), AKA gulp file
 
 ### new Mejs(locals) => `mejs` object
 
