@@ -22,7 +22,7 @@ describe('mejs', function () {
     assert.throws(function () {
       mejs.render('index')
     })
-    assert.throws(function () {
+    assert.doesNotThrow(function () {
       mejs.get('index')
     })
     assert.strictEqual(mejs.add('index', tplFn), mejs)
@@ -73,7 +73,7 @@ describe('mejs', function () {
     var mejsB = new Mejs()
     var mejsC = new Mejs()
 
-    assert.throws(function () {
+    assert.doesNotThrow(function () {
       mejsA.get('index')
     })
 

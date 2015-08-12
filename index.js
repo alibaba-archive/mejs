@@ -68,11 +68,12 @@ mejsCompile.initView = function (pattern, options) {
   function View (tplName) {
     this.tplName = tplName
   }
+  var mejs = mejsCompile.initMejs(pattern, options)
 
-  View.prototype.path = 'NO_NEED' // fake for express
-  View.prototype.mejs = mejsCompile.initMejs(pattern, options)
+  View.prototype.path = 'NONE' // fake for express
+  View.mejs = View.prototype.mejs = mejs
   View.prototype.render = function (data, fn) {
-    fn(null, this.mejs.renderEx(this.tplName, data))
+    fn(null, mejs.renderEx(this.tplName, data))
   }
   return View
 }
