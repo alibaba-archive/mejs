@@ -37,7 +37,6 @@ function mejsCompile (mejsFile, options) {
     mejsFile = mejsCompile.precompileFromGlob(mejsFile, options)
   }
   if (!(mejsFile instanceof File)) throw new TypeError(String(mejsFile) + ' is not File object')
-
   var sandbox = options.sandbox || {console: console}
   sandbox.module = {exports: {}}
   runInNewContext(mejsFile.contents.toString(), sandbox, {filename: mejsFile.path})
@@ -137,7 +136,7 @@ mejsCompile.precompileFromGlob = function (pattern, options) {
   globOptions.matchBase = globOptions.matchBase !== false
   var files = glob.sync(pattern, globOptions)
   if (!files.length) throw new Error('No file matched with ' + pattern)
-  if (!options.base) options.base = pattern.replace(/\*.*$/, '')
+  if (!options.base) options.base = globBase(pattern, files)
   return mejsCompile.precompile(files.map(function (path) {
     return new File(fs.readFileSync(path), path, options.base)
   }), options)
@@ -147,6 +146,23 @@ function File (contents, path, base) {
   this.contents = contents
   this.path = path || ''
   this.base = base || ''
+}
+
+function globBase (pattern, globFiles) {
+  var base = extractGlobBase(pattern, globFiles)
+  if (base[base.length - 1] === path.sep) return base.slice(0, -1)
+  return path.dirname(base)
+}
+
+function extractGlobBase (pattern, globFiles) {
+  var base = []
+  for (var i = 0; i < pattern.length; i++) {
+    for (var j = 0; j < globFiles.length; j++) {
+      if (pattern[i] !== globFiles[j][i]) return base.join('')
+    }
+    base.push(pattern[i])
+  }
+  return base.join('')
 }
 
 function stripBOM (content) {
