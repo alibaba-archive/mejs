@@ -6,31 +6,10 @@
 
 /*global describe, it*/
 
-// var Ejs = require('../lib/ejs')
 var mejsCompile = require('../index')
 var fs = require('fs')
 var read = fs.readFileSync
 var assert = require('assert')
-// var path = require('path')
-
-// From https://gist.github.com/pguillory/729616
-// function hook_stdio (stream, callback) {
-//   var old_write = stream.write
-//
-//   stream.write = (function () {
-//     return function (string, encoding, fd) {
-//       callback(string, encoding, fd)
-//     }
-//   })(stream.write)
-//
-//   return function () {
-//     stream.write = old_write
-//   }
-// }
-
-/**
- * Load(fixtureFile `name`.
- */
 
 function fixtureMejs (name, options) {
   var Mejs = mejsCompile('test/fixtures/' + name, options)
@@ -216,6 +195,28 @@ describe('-%>', function () {
   it('not produce newlines', function () {
     var mejs = fixtureMejs('no.newlines.ejs')
     assert.strictEqual(mejs.render('no.newlines', {users: users}), fixtureFile('no.newlines.html'))
+  })
+
+  it('works with unix style', function () {
+    var mejs = tplStr2Mejs('<ul><% -%>\n' +
+      '<% it.users.forEach(function(user){ -%>\n' +
+      '<li><%= user.name -%></li>\n' +
+      '<% }) -%>\n' +
+      '</ul><% -%>\n')
+
+    var expectedResult = '<ul><li>geddy</li>\n<li>neil</li>\n<li>alex</li>\n</ul>'
+    assert.equal(mejs.render('index', {users: users}), expectedResult)
+  })
+
+  it('works with windows style', function () {
+    var mejs = tplStr2Mejs('<ul><% -%>\r\n' +
+      '<% it.users.forEach(function(user){ -%>\r\n' +
+      '<li><%= user.name -%></li>\r\n' +
+      '<% }) -%>\r\n' +
+      '</ul><% -%>\r\n')
+
+    var expectedResult = '<ul><li>geddy</li>\r\n<li>neil</li>\r\n<li>alex</li>\r\n</ul>'
+    assert.equal(mejs.render('index', {users: users}), expectedResult)
   })
 })
 
