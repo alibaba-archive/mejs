@@ -3,12 +3,12 @@
 // **Github:** https://github.com/teambition/mejs
 //
 // **License:** MIT
-/*global describe, it*/
 
 var assert = require('assert')
+var tman = require('tman')
 var Mejs = require('../lib/mejs')
 
-describe('mejs', function () {
+tman.suite('mejs', function () {
   function tplFn (x) {
     return x
   }
@@ -18,7 +18,7 @@ describe('mejs', function () {
   })
   var data = {ids: [1, 2, 3]}
 
-  it('mejs.add, mejs.get, mejs.remove, mejs.render', function () {
+  tman.it('mejs.add, mejs.get, mejs.remove, mejs.render', function () {
     assert.throws(function () {
       mejs.render('index')
     })
@@ -37,7 +37,7 @@ describe('mejs', function () {
     assert.deepEqual(mejs.render('post', data), {config: {test: 'test'}, ids: [1, 2, 3]})
   })
 
-  it('mejs.resolve', function () {
+  tman.it('mejs.resolve', function () {
     assert.strictEqual(mejs.resolve('a', 'b'), 'b')
     assert.strictEqual(mejs.resolve('a/', 'b'), 'a/b')
     assert.strictEqual(mejs.resolve('a//', 'b'), 'a/b')
@@ -55,7 +55,7 @@ describe('mejs', function () {
     assert.strictEqual(mejs.resolve('a/b/c/', '../../d/e'), 'a/d/e')
   })
 
-  it('mejs.escape', function () {
+  tman.it('mejs.escape', function () {
     assert.strictEqual(mejs.escape('abc'), 'abc')
     assert.strictEqual(mejs.escape('<abc>'), '&lt;abc&gt;')
     assert.strictEqual(mejs.escape('&gt;'), '&amp;gt;')
@@ -65,7 +65,7 @@ describe('mejs', function () {
     assert.strictEqual(mejs.escape('abc<>'), 'abc&lt;&gt;')
   })
 
-  it('mejs.import', function () {
+  tman.it('mejs.import', function () {
     var mejsA = new Mejs()
     var mejsB = new Mejs()
     var mejsC = new Mejs()

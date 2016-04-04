@@ -4,12 +4,11 @@
 //
 // **License:** MIT
 
-/*global describe, it*/
-
-var mejsCompile = require('../index')
 var fs = require('fs')
-var read = fs.readFileSync
+var tman = require('tman')
 var assert = require('assert')
+var mejsCompile = require('..')
+var read = fs.readFileSync
 
 function fixtureMejs (name, options) {
   var Mejs = mejsCompile('test/fixtures/' + name, options)
@@ -35,54 +34,54 @@ users.push({name: 'geddy'})
 users.push({name: 'neil'})
 users.push({name: 'alex'})
 
-describe('Basic', function () {
-  it('compile simple string', function () {
+tman.suite('Basic', function () {
+  tman.it('compile simple string', function () {
     var mejs = fixtureMejs('simple.ejs')
     assert.strictEqual(mejs.render('simple'), fixtureFile('simple.html'))
   })
 
-  it('compile empty string', function () {
+  tman.it('compile empty string', function () {
     var mejs = fixtureMejs('empty.ejs')
     assert.strictEqual(mejs.render('empty'), '')
   })
 
-  it('throw if template not exist', function () {
+  tman.it('throw if template not exist', function () {
     assert.throws(function () {
       fixtureMejs('simple.ejs').render('none')
     })
   })
 
-  it('throw if there are JS syntax errors', function () {
+  tman.it('throw if there are JS syntax errors', function () {
     assert.throws(function () {
       fixtureMejs('fail-js.ejs').render('fail')
     })
   })
 
-  it('throw if there are ejs syntax errors', function () {
+  tman.it('throw if there are ejs syntax errors', function () {
     assert.throws(function () {
       fixtureMejs('fail-ejs.ejs').render('fail')
     })
   })
 
-  it('throw if there are ejs syntax errors', function () {
+  tman.it('throw if there are ejs syntax errors', function () {
     assert.throws(function () {
       fixtureMejs('error.ejs').render('no.newlines.error')
     })
   })
 
-  it('throw if there are ejs syntax errors', function () {
+  tman.it('throw if there are ejs syntax errors', function () {
     assert.throws(function () {
       fixtureMejs('no.newlines.error.ejs').render('no.newlines.error')
     })
   })
 
-  it('throw if ejs syntax without "it"', function () {
+  tman.it('throw if ejs syntax without "it"', function () {
     assert.throws(function () {
       tplStr2Mejs('<p><%= name %></p>').render('index', {name: 'lilei'})
     })
   })
 
-  it('allow customizing delimiter local var', function () {
+  tman.it('allow customizing delimiter local var', function () {
     var mejs
     mejs = tplStr2Mejs('<p><?= it.name ?></p>', {delimiter: '?'})
     assert.strictEqual(mejs.render('index', {name: 'lilei'}), '<p>lilei</p>')
@@ -94,7 +93,7 @@ describe('Basic', function () {
     assert.strictEqual(mejs.render('index', {name: 'lilei'}), '<p>lilei</p>')
   })
 
-  it('allow default local var', function () {
+  tman.it('allow default local var', function () {
     var mejs
     mejs = tplStr2Mejs('<p><%= it.name %></p>', {locals: {name: 'zhang'}})
     assert.strictEqual(mejs.render('index'), '<p>zhang</p>')
@@ -102,14 +101,14 @@ describe('Basic', function () {
     assert.strictEqual(mejs.render('index', {name: null}), '<p></p>')
   })
 
-  it('context is mejs', function () {
+  tman.it('context is mejs', function () {
     var mejs = fixtureMejs('context.ejs')
     assert.strictEqual(mejs.render('context', {ctx: mejs}), fixtureFile('context.html'))
   })
 })
 
-describe('Special value', function () {
-  it('undefined renders nothing escaped', function () {
+tman.suite('Special value', function () {
+  tman.it('undefined renders nothing escaped', function () {
     var mejs = tplStr2Mejs('<%= undefined %>')
     assert.strictEqual(mejs.render('index'), '')
 
@@ -120,7 +119,7 @@ describe('Special value', function () {
     assert.strictEqual(mejs.render('index'), '')
   })
 
-  it('null renders nothing escaped', function () {
+  tman.it('null renders nothing escaped', function () {
     var mejs = tplStr2Mejs('<%= null %>')
     assert.strictEqual(mejs.render('index'), '')
 
@@ -128,7 +127,7 @@ describe('Special value', function () {
     assert.strictEqual(mejs.render('index'), '')
   })
 
-  it('zero-value data item renders something escaped', function () {
+  tman.it('zero-value data item renders something escaped', function () {
     var mejs = tplStr2Mejs('<%= 0 %>')
     assert.strictEqual(mejs.render('index'), '0')
 
@@ -136,7 +135,7 @@ describe('Special value', function () {
     assert.strictEqual(mejs.render('index'), '0')
   })
 
-  it('false renders something escaped', function () {
+  tman.it('false renders something escaped', function () {
     var mejs = tplStr2Mejs('<%= false %>')
     assert.strictEqual(mejs.render('index'), 'false')
 
@@ -145,59 +144,59 @@ describe('Special value', function () {
   })
 })
 
-describe('<%', function () {
-  it('without semicolons', function () {
+tman.suite('<%', function () {
+  tman.it('without semicolons', function () {
     var mejs = fixtureMejs('no.semicolons.ejs')
     assert.strictEqual(mejs.render('no.semicolons'), fixtureFile('no.semicolons.html'))
   })
 })
 
-describe('<%=', function () {
-  it('escape &amp;<script>', function () {
+tman.suite('<%=', function () {
+  tman.it('escape &amp;<script>', function () {
     var mejs = tplStr2Mejs('<%= it.name %>')
     assert.strictEqual(mejs.render('index', {name: '&nbsp;<script>'}), '&amp;nbsp;&lt;script&gt;')
   })
 
-  it("should escape '", function () {
+  tman.it("should escape '", function () {
     var mejs = tplStr2Mejs('<%= it.name %>')
     assert.strictEqual(mejs.render('index', {name: "The Jones's"}), 'The Jones&#39;s')
   })
 
-  it('should escape &foo_bar;', function () {
+  tman.it('should escape &foo_bar;', function () {
     var mejs = tplStr2Mejs('<%= it.name %>')
     assert.strictEqual(mejs.render('index', {name: '&foo_bar;'}), '&amp;foo_bar;')
   })
 })
 
-describe('<%-', function () {
-  it('not escape', function () {
+tman.suite('<%-', function () {
+  tman.it('not escape', function () {
     var mejs = tplStr2Mejs('<%- it.name %>')
     assert.strictEqual(mejs.render('index', {name: '<script>'}), '<script>')
   })
 })
 
-describe('%>', function () {
-  it('produce newlines', function () {
+tman.suite('%>', function () {
+  tman.it('produce newlines', function () {
     var mejs = fixtureMejs('newlines.ejs')
     assert.strictEqual(mejs.render('newlines', {users: users}), fixtureFile('newlines.html'))
   })
-  it('works with `-%>` interspersed', function () {
+  tman.it('works with `-%>` interspersed', function () {
     var mejs = fixtureMejs('newlines.mixed.ejs')
     assert.strictEqual(mejs.render('newlines.mixed', {users: users}), fixtureFile('newlines.mixed.html'))
   })
-  it('consecutive tags work', function () {
+  tman.it('consecutive tags work', function () {
     var mejs = fixtureMejs('consecutive-tags.ejs')
     assert.strictEqual(mejs.render('consecutive-tags'), fixtureFile('consecutive-tags.html'))
   })
 })
 
-describe('-%>', function () {
-  it('not produce newlines', function () {
+tman.suite('-%>', function () {
+  tman.it('not produce newlines', function () {
     var mejs = fixtureMejs('no.newlines.ejs')
     assert.strictEqual(mejs.render('no.newlines', {users: users}), fixtureFile('no.newlines.html'))
   })
 
-  it('works with unix style', function () {
+  tman.it('works with unix style', function () {
     var mejs = tplStr2Mejs('<ul><% -%>\n' +
       '<% it.users.forEach(function(user){ -%>\n' +
       '<li><%= user.name -%></li>\n' +
@@ -208,7 +207,7 @@ describe('-%>', function () {
     assert.equal(mejs.render('index', {users: users}), expectedResult)
   })
 
-  it('works with windows style', function () {
+  tman.it('works with windows style', function () {
     var mejs = tplStr2Mejs('<ul><% -%>\r\n' +
       '<% it.users.forEach(function(user){ -%>\r\n' +
       '<li><%= user.name -%></li>\r\n' +
@@ -220,13 +219,13 @@ describe('-%>', function () {
   })
 })
 
-describe('<%%', function () {
-  it('produce literals', function () {
+tman.suite('<%%', function () {
+  tman.it('produce literals', function () {
     var mejs = tplStr2Mejs('<%%- "foo" %>')
     assert.strictEqual(mejs.render('index'), '<%- "foo" %>')
   })
 
-  it('work without an end tag', function () {
+  tman.it('work without an end tag', function () {
     var mejs = tplStr2Mejs('<%%')
     assert.strictEqual(mejs.render('index'), '<%')
 
@@ -235,74 +234,74 @@ describe('<%%', function () {
   })
 })
 
-describe('single quotes', function () {
-  it('not mess up the constructed function', function () {
+tman.suite('single quotes', function () {
+  tman.it('not mess up the constructed function', function () {
     var mejs = fixtureMejs('single-quote.ejs')
     assert.strictEqual(mejs.render('single-quote'), fixtureFile('single-quote.html'))
   })
 })
 
-describe('double quotes', function () {
-  it('not mess up the constructed function', function () {
+tman.suite('double quotes', function () {
+  tman.it('not mess up the constructed function', function () {
     var mejs = fixtureMejs('double-quote.ejs')
     assert.strictEqual(mejs.render('double-quote'), fixtureFile('double-quote.html'))
   })
 })
 
-describe('backslashes', function () {
-  it('escape', function () {
+tman.suite('backslashes', function () {
+  tman.it('escape', function () {
     var mejs = fixtureMejs('backslash.ejs')
     assert.strictEqual(mejs.render('backslash'), fixtureFile('backslash.html'))
   })
 })
 
-describe('messed up whitespace', function () {
-  it('work', function () {
+tman.suite('messed up whitespace', function () {
+  tman.it('work', function () {
     var mejs = fixtureMejs('messed.ejs')
     assert.strictEqual(mejs.render('messed', {users: users}), fixtureFile('messed.html'))
   })
 })
 
-describe('rmWhitespace', function () {
-  it('works', function () {
+tman.suite('rmWhitespace', function () {
+  tman.it('works', function () {
     var mejs = fixtureMejs('rmWhitespace.ejs', {rmWhitespace: true})
     assert.strictEqual(mejs.render('rmWhitespace'), fixtureFile('rmWhitespace.html'))
   })
 })
 
-describe('include()', function () {
-  it('include ejs', function () {
+tman.suite('include()', function () {
+  tman.it('include ejs', function () {
     var mejs = fixtureMejs('include-simple.ejs')
       .import(fixtureMejs('hello-world.ejs'))
     assert.strictEqual(mejs.render('include-simple'), fixtureFile('include-simple.html'))
   })
 
-  it('include ejs fails if not exist', function () {
+  tman.it('include ejs fails if not exist', function () {
     assert.throws(function () {
       fixtureMejs('include-simple.ejs').render('include-simple')
     })
   })
 
-  it('strips BOM', function () {
+  tman.it('strips BOM', function () {
     var mejs = tplStr2Mejs('<%- include("includes/bom") %>')
       .import(fixtureMejs('includes/bom.ejs', {base: 'test/fixtures'}))
     assert.strictEqual(mejs.render('index'), '<p>This is a file with BOM.</p>')
   })
 
-  it('include ejs with locals', function () {
+  tman.it('include ejs with locals', function () {
     var mejs = fixtureMejs('include.ejs', {delimiter: '@'})
       .import(fixtureMejs('pet.ejs', {delimiter: '@'}))
     assert.strictEqual(mejs.render('include', {pets: users}), fixtureFile('include.html'))
   })
 
-  it('work when nested', function () {
+  tman.it('work when nested', function () {
     var mejs = fixtureMejs('menu.ejs')
       .import(fixtureMejs('includes/menu-item.ejs', {base: 'test/fixtures'}))
       .import(fixtureMejs('includes/menu/item.ejs', {base: 'test/fixtures'}))
     assert.strictEqual(mejs.render('menu', {pets: users}), fixtureFile('menu.html'))
   })
 
-  it('work with a variable path', function () {
+  tman.it('work with a variable path', function () {
     var includePath = 'includes/menu-item'
     var mejs = fixtureMejs('menu_var.ejs')
       .import(fixtureMejs('includes/menu-item.ejs', {base: 'test/fixtures'}))
@@ -310,20 +309,20 @@ describe('include()', function () {
     assert.strictEqual(mejs.render('menu_var', {pets: users, varPath: includePath}), fixtureFile('menu.html'))
   })
 
-  it('include arbitrary files as-is', function () {
+  tman.it('include arbitrary files as-is', function () {
     var mejs = fixtureMejs('include.css.ejs')
       .import(fixtureMejs('style.css'))
     assert.strictEqual(mejs.render('include.css'), fixtureFile('include.css.html'))
   })
 
-  it('no false positives', function () {
+  tman.it('no false positives', function () {
     var mejs = tplStr2Mejs('<p><% %> include foo <% %></p>')
     assert.strictEqual(mejs.render('index'), '<p> include foo </p>')
   })
 })
 
-describe('comments', function () {
-  it('fully render with comments removed', function () {
+tman.suite('comments', function () {
+  tman.it('fully render with comments removed', function () {
     var mejs = fixtureMejs('comments.ejs')
     assert.strictEqual(mejs.render('comments'), fixtureFile('comments.html'))
   })

@@ -4,6 +4,7 @@ Moduled and Embedded JavaScript templates, run in node.js and all browsers.
 
 [![NPM version][npm-image]][npm-url]
 [![Build Status][travis-image]][travis-url]
+[![Downloads][downloads-image]][downloads-url]
 
 ## Features
 
@@ -74,17 +75,17 @@ var Mejs = mejsCompile('views/**/*.html'); // options.base == 'views/'
 It is implemented for express. arguments is same as `mejsCompile.initMejs`.
 
 ```js
-var app = express();
+var app = express()
 app.set('view', mejs.initView('views/**/*.ejs', {
   layout: 'layout',
   locals: app.locals
-});
+}))
 
 //... render with layout
-res.render('index', {user: req.user});
+res.render('index', {user: req.user})
 
 //... disable layout for 'login' view
-res.render('login', {layout: false});
+res.render('login', {layout: false})
 ```
 
 ### mejsCompile.precompile(files[, options]) => `mejs` file object
@@ -105,8 +106,7 @@ var mejsSource = mejsCompile.precompile([{
     path: 'lib/index',
     contents: 'lib index content...'
   }
-  ...
-], {base: 'views'});
+], {base: 'views'})
 ```
 
 ### mejsCompile.precompileFromGlob(pattern[, options]) => `mejs` file object
@@ -116,7 +116,7 @@ Precompile ejs teamplates to a file object, then you can write it to a JS file.
 - `options`: `options` is same as above.
 
 ```js
-var mejsSource = mejsCompile.precompileFromGlob('views/**/*.js', {base: 'views'});
+var mejsSource = mejsCompile.precompileFromGlob('views/**/*.js', {base: 'views'})
 ```
 
 ### mejsCompile.Templates(text[, options])
@@ -138,23 +138,23 @@ var mejs = new Mejs({
   },
   moment: moment,
   locale: function() {
-    return this.locale;
+    return this.locale
   },
   __: function() {
-    return this.__.apply(this, arguments);
+    return this.__.apply(this, arguments)
   }
-});
+})
 ```
 
 ### Class Method: Mejs.import(templates)
 Import templates to global from a templates module.
 
 ```js
-var Mejs = require('Mejs');
-var tplsA = require('tplsA');
-var tplsB = require('tplsB');
+var Mejs = require('Mejs')
+var tplsA = require('tplsA')
+var tplsB = require('tplsB')
 
-Mejs.import(tplsA).import(tplsB);
+Mejs.import(tplsA).import(tplsB)
 ```
 
 ### mejs.render(tplName, data) => filled view string
@@ -164,8 +164,8 @@ Render a template with data
 - `data`: data object filled to template
 
 ```js
-mejs.render('index', userObj);
-mejs.render('global/header', headerDate);
+mejs.render('index', userObj)
+mejs.render('global/header', headerDate)
 //...
 ```
 
@@ -176,7 +176,7 @@ import another mejs object object to `mejs`, then `mejs` will have the templates
 - `mejsX`: mejs object for import
 
 ```js
-mejs.import('common', mejsA);
+mejs.import('common', mejsA)
 ```
 
 ### mejs.add(tplName, tplFn)
@@ -199,3 +199,6 @@ Resolve template path.
 
 [travis-url]: https://travis-ci.org/teambition/mejs
 [travis-image]: http://img.shields.io/travis/teambition/mejs.svg
+
+[downloads-url]: https://npmjs.org/package/mejs
+[downloads-image]: http://img.shields.io/npm/dm/mejs.svg?style=flat-square

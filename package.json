@@ -4,8 +4,8 @@
   "authors": [
     "Yan Qing <admin@zensh.com>"
   ],
-  "version": "0.6.3",
-  "main": "index.js",
+  "version": "0.7.0",
+  "main": "lib/index.js",
   "repository": {
     "type": "git",
     "url": "git@github.com:teambition/mejs.git"
@@ -19,15 +19,14 @@
     "glob": "^6.0.4"
   },
   "devDependencies": {
-    "standard": "^5.4.1",
-    "mocha": "^2.3.4"
+    "standard": "^6.0.8",
+    "tman": "^0.5.2"
   },
   "scripts": {
-    "test": "standard & mocha"
+    "test": "standard & tman"
   },
   "files": [
     "lib",
-    "index.js",
     "README.md"
   ]
 }
