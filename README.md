@@ -46,7 +46,7 @@ npm install mejs
 ## API
 
 ```js
-var mejsCompile = require('mejs');
+var mejsCompile = require('mejs')
 ```
 
 ### mejsCompile(patternOrMejsfile[, options]) => `Mejs` Class
@@ -60,7 +60,7 @@ Compile ejs templates to a `Mejs` Class.
 - `options.rmWhitespace`: Remove all safe-to-remove whitespace, including leading and trailing whitespace. It also enables a safer version of `-%>` line slurping for all scriptlet tags (it does not strip new lines of tags in the middle of a line).
 
 ```js
-var Mejs = mejsCompile('views/**/*.html'); // options.base == 'views/'
+var Mejs = mejsCompile('views/**/*.html') // options.base == 'views/'
 ```
 
 ### mejsCompile.initMejs(pattern[, options]) => `mejs` object
