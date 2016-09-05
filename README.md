@@ -9,10 +9,6 @@ Moduled and Embedded JavaScript templates, run in node.js and all browsers.
 ## Features
 
 - Run in node.js and all browsers
-- Control flow with `<% %>`
-- Escaped output with `<%= %>`
-- Unescaped raw output with `<%- %>`
-- Trim-mode ('newline slurping') with `-%>` ending tag
 - Custom delimiters (e.g., use '<? ?>' instead of '<% %>')
 - Full support for `include`
 - Full support for `import`(Moduled)
@@ -20,14 +16,16 @@ Moduled and Embedded JavaScript templates, run in node.js and all browsers.
 - Support [express](https://github.com/strongloop/express), [koa](https://github.com/koajs/koa), [toa](https://github.com/toajs/toa) ...
 
 ## Tags
-
 - `<%`: 'Scriptlet' tag, for control-flow, no output
-- `<%=`: Outputs the value into the template (HTML escaped)
+- `<%_`: 'Whitespace Slurping' Scriptlet tag, strips all whitespace before it
+- `<%=`: Outputs the value into the template (escaped)
 - `<%-`: Outputs the unescaped value into the template
 - `<%#`: Comment tag, no execution, no output
 - `<%%`: Outputs a literal '<%'
-- `%>`:  Plain ending tag
+- `%%>`: Outputs a literal '%>'
+- `%>`: Plain ending tag
 - `-%>`: Trim-mode ('newline slurp') tag, trims following newline
+- `_%>`: 'Whitespace Slurping' ending tag, removes all whitespace after it
 
 Implementations:
 
