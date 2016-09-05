@@ -22,13 +22,12 @@ function tplStr2Mejs (tplStr, options) {
 }
 
 function fixtureFile (name) {
-  return read('test/fixtures/' + name, 'utf8').trim()
+  return read('test/fixtures/' + name, 'utf8')
 }
 
 /**
  * User fixtures.
  */
-
 var users = []
 users.push({name: 'geddy'})
 users.push({name: 'neil'})
@@ -231,6 +230,25 @@ tman.suite('<%%', function () {
 
     mejs = fixtureMejs('literal.ejs', {delimiter: ' '})
     assert.strictEqual(mejs.render('literal'), fixtureFile('literal.html'))
+  })
+})
+
+tman.suite('%%>', function () {
+  tman.it('produce literal', function () {
+    var mejs = tplStr2Mejs('%%>')
+    assert.strictEqual(mejs.render('index'), '%>')
+
+    mejs = tplStr2Mejs('  >', {delimiter: ' '})
+    console.log(mejs.templates.index.toString())
+    assert.strictEqual(mejs.render('index'), ' >')
+  })
+})
+
+tman.suite('<%_ and _%>', function () {
+  tman.it('slurps spaces and tabs', function () {
+    var mejs = fixtureMejs('space-and-tab-slurp.ejs')
+    assert.strictEqual(mejs.render('space-and-tab-slurp', {users: users}),
+      fixtureFile('space-and-tab-slurp.html'))
   })
 })
 
