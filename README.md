@@ -55,7 +55,9 @@ Compile ejs templates to a `Mejs` Class.
 - `options.glob`: Glob options
 - `options.base`: Everything before a glob (same as tplName) starts.
 - `options.delimiter`: Character to use with angle brackets for open/close, default is `%`.
-- `options.rmWhitespace`: Remove all safe-to-remove whitespace, including leading and trailing whitespace. It also enables a safer version of `-%>` line slurping for all scriptlet tags (it does not strip new lines of tags in the middle of a line).
+- `options.rmWhitespace`: Remove all safe-to-remove whitespace, including leading and trailing whitespace in compiling. It also enables a safer version of `-%>` line slurping for all scriptlet tags (it does not strip new lines of tags in the middle of a line).
+- `options.rmComment`: Remove comment before compiling (`/<!--([\s\S]*?)-->/g`).
+- `options.rmLinefeed`: Remove linefeed and trailing whitespace before compiling (`/\n+[\s]*/g`).
 
 ```js
 var Mejs = mejsCompile('views/**/*.html') // options.base == 'views/'
@@ -117,8 +119,8 @@ Precompile ejs teamplates to a file object, then you can write it to a JS file.
 var mejsSource = mejsCompile.precompileFromGlob('views/**/*.js', {base: 'views'})
 ```
 
-### mejsCompile.Templates(text[, options])
-Ejs templates engine.
+### mejsCompile.Template(text[, options])
+Ejs template engine.
 
 ### mejsCompile.File(contents[, options][, base])
 `mejs` file Class. It is similar to [vinyl](http://github.com/wearefractal/vinyl), AKA gulp file

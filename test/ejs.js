@@ -239,7 +239,6 @@ tman.suite('%%>', function () {
     assert.strictEqual(mejs.render('index'), '%>')
 
     mejs = tplStr2Mejs('  >', {delimiter: ' '})
-    console.log(mejs.templates.index.toString())
     assert.strictEqual(mejs.render('index'), ' >')
   })
 })
