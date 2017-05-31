@@ -4,19 +4,19 @@
 //
 // **License:** MIT
 
-var assert = require('assert')
-var tman = require('tman')
-var Mejs = require('../lib/mejs')
+const assert = require('assert')
+const tman = require('tman')
+const Mejs = require('../lib/mejs')
 
 tman.suite('mejs', function () {
   function tplFn (x) {
     return x
   }
 
-  var mejs = new Mejs({
+  let mejs = new Mejs({
     config: {test: 'test'}
   })
-  var data = {ids: [1, 2, 3]}
+  let data = {ids: [1, 2, 3]}
 
   tman.it('mejs.add, mejs.get, mejs.remove, mejs.render', function () {
     assert.throws(function () {
@@ -66,9 +66,9 @@ tman.suite('mejs', function () {
   })
 
   tman.it('mejs.import', function () {
-    var mejsA = new Mejs()
-    var mejsB = new Mejs()
-    var mejsC = new Mejs()
+    let mejsA = new Mejs()
+    let mejsB = new Mejs()
+    let mejsC = new Mejs()
 
     assert.doesNotThrow(function () {
       mejsA.get('index')

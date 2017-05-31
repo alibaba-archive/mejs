@@ -1,5 +1,5 @@
-mejs
-====
+# mejs
+
 Moduled and Embedded JavaScript templates, run in node.js and all browsers.
 
 [![NPM version][npm-image]][npm-url]
@@ -16,6 +16,7 @@ Moduled and Embedded JavaScript templates, run in node.js and all browsers.
 - Support [express](https://github.com/strongloop/express), [koa](https://github.com/koajs/koa), [toa](https://github.com/toajs/toa) ...
 
 ## Tags
+
 - `<%`: 'Scriptlet' tag, for control-flow, no output
 - `<%_`: 'Whitespace Slurping' Scriptlet tag, strips all whitespace before it
 - `<%=`: Outputs the value into the template (escaped)
@@ -44,7 +45,7 @@ npm install mejs
 ## API
 
 ```js
-var mejsCompile = require('mejs')
+const mejsCompile = require('mejs')
 ```
 
 ### mejsCompile(patternOrMejsfile[, options]) => `Mejs` Class
@@ -60,7 +61,7 @@ Compile ejs templates to a `Mejs` Class.
 - `options.rmLinefeed`: Remove linefeed and trailing whitespace before compiling (`/\n+[\s]*/g`).
 
 ```js
-var Mejs = mejsCompile('views/**/*.html') // options.base == 'views/'
+const Mejs = mejsCompile('views/**/*.html') // options.base == 'views/'
 ```
 
 ### mejsCompile.initMejs(pattern[, options]) => `mejs` object
@@ -75,7 +76,7 @@ var Mejs = mejsCompile('views/**/*.html') // options.base == 'views/'
 It is implemented for express. arguments is same as `mejsCompile.initMejs`.
 
 ```js
-var app = express()
+const app = express()
 app.set('view', mejs.initView('views/**/*.ejs', {
   layout: 'layout',
   locals: app.locals
@@ -89,6 +90,7 @@ res.render('login', {layout: false})
 ```
 
 ### mejsCompile.precompile(files[, options]) => `mejs` file object
+
 Precompile ejs templates to a file object, then you can write it to a JS file.
 
 - `files`: Template files array, the file in array must have `path` and `contents`.
@@ -96,7 +98,7 @@ Precompile ejs templates to a file object, then you can write it to a JS file.
   - `options.mini`: Precompile a minimum templates module, it is not a Mejs class, should be imported to Mejs class by `Mejs.import`
 
 ```js
-var mejsSource = mejsCompile.precompile([{
+const mejsSource = mejsCompile.precompile([{
     path: 'index.html',
     contents: 'index content...'
   }, {
@@ -110,19 +112,22 @@ var mejsSource = mejsCompile.precompile([{
 ```
 
 ### mejsCompile.precompileFromGlob(pattern[, options]) => `mejs` file object
+
 Precompile ejs teamplates to a file object, then you can write it to a JS file.
 
 - `pattern`: glob pattern.
 - `options`: `options` is same as above.
 
 ```js
-var mejsSource = mejsCompile.precompileFromGlob('views/**/*.js', {base: 'views'})
+const mejsSource = mejsCompile.precompileFromGlob('views/**/*.js', {base: 'views'})
 ```
 
 ### mejsCompile.Template(text[, options])
+
 Ejs template engine.
 
 ### mejsCompile.File(contents[, options][, base])
+
 `mejs` file Class. It is similar to [vinyl](http://github.com/wearefractal/vinyl), AKA gulp file
 
 ### new Mejs(locals) => `mejs` object
@@ -131,7 +136,7 @@ Ejs template engine.
 
 ```js
 // add config, moment and node-i18n to global locals
-var mejs = new Mejs({
+const mejs = new Mejs({
   config: {
     host: 'www.mejs.com',
     apiHost: 'www.mejs.com/api'
@@ -147,17 +152,19 @@ var mejs = new Mejs({
 ```
 
 ### Class Method: Mejs.import(templates)
+
 Import templates to global from a templates module.
 
 ```js
-var Mejs = require('Mejs')
-var tplsA = require('tplsA')
-var tplsB = require('tplsB')
+const Mejs = require('Mejs')
+const tplsA = require('tplsA')
+const tplsB = require('tplsB')
 
 Mejs.import(tplsA).import(tplsB)
 ```
 
 ### mejs.render(tplName, data) => filled view string
+
 Render a template with data
 
 - `tplName`: a full template name
@@ -170,6 +177,7 @@ mejs.render('global/header', headerDate)
 ```
 
 ### mejs.import([namespace], mejsX)
+
 import another mejs object object to `mejs`, then `mejs` will have the templates that from `mejsX`.
 
 - `namespace`: namespace string
@@ -180,18 +188,23 @@ mejs.import('common', mejsA)
 ```
 
 ### mejs.add(tplName, tplFn)
+
 Add a template function to current mejs.
 
 ### mejs.get(tplName)
+
 Get a template function from current mejs.
 
 ### mejs.remove(tplName)
+
 Remove a template function from current mejs.
 
 ### mejs.resolve(from, to)
+
 Resolve template path.
 
 ### mejs.escape(string)
+
 `escape` function for templates function. You can overwrite it.
 
 [npm-url]: https://npmjs.org/package/mejs
